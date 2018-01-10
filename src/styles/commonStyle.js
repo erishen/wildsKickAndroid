@@ -10,7 +10,8 @@ const CommonStyle = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'black'
     },
     button: {
         backgroundColor: 'black'

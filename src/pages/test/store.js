@@ -1,5 +1,5 @@
 /**
- * Created by lei_sun on 2018/1/10.
+ * Created by lei_sun on 2017/11/6.
  */
 
 import {createStore, applyMiddleware} from 'redux'

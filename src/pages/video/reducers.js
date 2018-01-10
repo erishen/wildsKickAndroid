@@ -1,40 +1,57 @@
 /**
- * Created by lei_sun on 2017/11/6.
+ * Created by lei_sun on 2018/1/10.
  */
 
 import { combineReducers } from 'redux';
-
 import _ from 'lodash';
-
 import {
-    INIT_PAGE, ADD_PAGE_NUM, SUBTRACT_PAGE_NUM
+    setDuration, setCurrentTime, setPaused,
+    getIndexFiles
 } from './actions';
 
-const renderPlaceholderOnly = (state = true, action) => {
+var defaultVideoOption = {
+    rate: 1,
+    volume: 1,
+    muted: false,
+    resizeMode: 'contain',
+    duration: 0.0,
+    currentTime: 0.0,
+    paused: false
+};
+
+const videoOption = (state = defaultVideoOption, action) => {
     switch (action.type) {
-        case INIT_PAGE:
-            return true;
+        case setDuration:
+            var newState = _.cloneDeep(state);
+            newState.duration += action.duration;
+            return newState;
+        case setCurrentTime:
+            var newState = _.cloneDeep(state);
+            newState.currentTime += action.currentTime;
+            return newState;
+        case setPaused:
+            var newState = _.cloneDeep(state);
+            newState.paused = action.paused;
+            return newState;
         default:
             return state
     }
 };
 
-const pageNum = (state = 1, action) => {
-    switch (action.type) {
-        case INIT_PAGE:
-            return 1;
-        case ADD_PAGE_NUM:
-            return state + 1;
-        case SUBTRACT_PAGE_NUM:
-            return state - 1;
+const videoIndexFiles = (state = {}, action) => {
+    switch (action.type){
+        case getIndexFiles:
+            var newState = _.cloneDeep(state);
+            newState.indexFiles = action.indexFiles;
+            return newState;
         default:
-            return state
+            return state;
     }
 };
 
 const rootReducer = combineReducers({
-    renderPlaceholderOnly,
-    pageNum
+    videoOption,
+    videoIndexFiles
 });
 
 export default rootReducer;

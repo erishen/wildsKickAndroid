@@ -1,6 +1,7 @@
 /**
- * Created by lei_sun on 2017/11/6.
+ * Created by lei_sun on 2018/1/10.
  */
+
 import React, { Component } from 'react';
 import {
     Platform,
@@ -10,22 +11,22 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import Video from 'react-native-video';
+
 import store from './store';
 import * as actions from './actions';
-
-import CommonStyle from '../../styles/commonStyle';
 import VideoStyle from '../../styles/videoStyle';
-import TextComponent from '../../components/textComponent';
-import CommonUtil from '../../utils/commonUtil';
 
 export default class VideoPage extends Component<{}> {
     constructor(props){
         super(props);
         this.state = store.getState();
-        store.dispatch(actions.initPageInfo());
     }
 
-    componentWillMount() {}
+    componentWillMount() {
+        console.log('state', this.state);
+        store.dispatch(actions.getIndexFilesAction());
+    }
 
     componentDidMount() {
         this.unsubscribe = store.subscribe(() => {
@@ -37,23 +38,57 @@ export default class VideoPage extends Component<{}> {
         this.unsubscribe();
     }
 
+    onLoad = (data) => {
+        store.dispatch(actions.setDurationAction({ duration: data.duration }));
+    };
+
+    onProgress = (data) => {
+        store.dispatch(actions.setCurrentTimeAction({ currentTime: data.currentTime }));
+    };
+
+    onEnd = () => {
+        store.dispatch(actions.setPausedAction({ paused: true }));
+        this.video.seek(0);
+    };
+
+    onAudioBecomingNoisy = () => {
+        store.dispatch(actions.setPausedAction({ paused: true }));
+    };
+
+    onAudioFocusChanged = (event: { hasAudioFocus: boolean }) => {
+        store.dispatch(actions.setPausedAction({ paused: !event.hasAudioFocus }));
+    };
+
+    onPressVideo = () => {
+        let { videoOption } = this.state;
+        store.dispatch(actions.setPausedAction({ paused: !videoOption.paused }));
+    };
+
     render() {
-        CommonUtil.test();
-        let { renderPlaceholderOnly, pageNum } = this.state;
+        let { videoOption, videoIndexFiles } = this.state;
+        console.log('videoOption', videoOption, videoIndexFiles);
 
         return (
-            <View style={CommonStyle.container}>
-                <TextComponent style={VideoStyle.instructions} value={'video-' + pageNum} />
-                <Image style={VideoStyle.image} source={{ uri: 'https://pages.c-ctrip.com/you/livestream/videolist-cover.png' }} />
+            <View style={VideoStyle.fullScreen}>
                 <TouchableOpacity
-                    onPress = {() => { store.dispatch(actions.addPageNum()); }}
-                    style={CommonStyle.button}>
-                    <Text style={CommonStyle.text}>Add Page Num</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress = {() => { store.dispatch(actions.subtractPageNum()); }}
-                    style={CommonStyle.button}>
-                    <Text style={CommonStyle.text}>Subtract Page Num</Text>
+                    style={VideoStyle.fullScreen}
+                    onPress={this.onPressVideo}>
+                    <Video
+                        ref={(ref: Video) => { this.video = ref }}
+                        source={{ uri: 'http://172.25.143.1:9999/movie/IMG_4596.mp4', type: 'mp4' }}
+                        style={VideoStyle.fullScreen}
+                        rate={videoOption.rate}
+                        paused={videoOption.paused}
+                        volume={videoOption.volume}
+                        muted={videoOption.muted}
+                        resizeMode={videoOption.resizeMode}
+                        onLoad={this.onLoad}
+                        onProgress={this.onProgress}
+                        onEnd={this.onEnd}
+                        onAudioBecomingNoisy={this.onAudioBecomingNoisy}
+                        onAudioFocusChanged={this.onAudioFocusChanged}
+                        repeat={false}
+                    />
                 </TouchableOpacity>
             </View>
         );
