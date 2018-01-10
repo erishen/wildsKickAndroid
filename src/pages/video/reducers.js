@@ -16,7 +16,7 @@ var defaultVideoOption = {
     resizeMode: 'contain',
     duration: 0.0,
     currentTime: 0.0,
-    paused: false
+    paused: true
 };
 
 const videoOption = (state = defaultVideoOption, action) => {

@@ -16,6 +16,7 @@ import Video from 'react-native-video';
 import store from './store';
 import * as actions from './actions';
 import VideoStyle from '../../styles/videoStyle';
+import config from '../../utils/config';
 
 export default class VideoPage extends Component<{}> {
     constructor(props){
@@ -66,7 +67,30 @@ export default class VideoPage extends Component<{}> {
 
     render() {
         let { videoOption, videoIndexFiles } = this.state;
-        console.log('videoOption', videoOption, videoIndexFiles);
+        //console.log('videoOption', videoOption, videoIndexFiles);
+
+        var urlPrefix = 'http://' + config.ip + ':9999';
+        var playUrl = urlPrefix + '/movie/mp4/IMG_6374.mp4';
+        var playType = 'mp4';
+        var files = videoIndexFiles.files;
+        var index = videoIndexFiles.index;
+        var status = videoIndexFiles.status;
+
+        if(files){
+            var filesLen = files.length;
+            console.log('filesLen', filesLen);
+
+            if(filesLen > 0){
+                var firstFile = files[0];
+                var firstFilePathName = firstFile.pathname;
+                playUrl = urlPrefix + firstFilePathName;
+
+                /*
+                var pathArr = firstFilePathName.split('.');
+                playType = pathArr[1];
+                */
+            }
+        }
 
         return (
             <View style={VideoStyle.fullScreen}>
@@ -75,7 +99,7 @@ export default class VideoPage extends Component<{}> {
                     onPress={this.onPressVideo}>
                     <Video
                         ref={(ref: Video) => { this.video = ref }}
-                        source={{ uri: 'http://172.25.143.1:9999/movie/IMG_4596.mp4', type: 'mp4' }}
+                        source={{ uri: playUrl, type: playType }}
                         style={VideoStyle.fullScreen}
                         rate={videoOption.rate}
                         paused={videoOption.paused}
