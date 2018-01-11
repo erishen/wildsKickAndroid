@@ -214,6 +214,7 @@ var getVideoIndex = function(params, dispatch){
 
                     var file = files[currentIndex];
                     params.pathName = file.pathName;
+                    console.log('file.pathName', file.pathName);
 
                     dispatch({
                         type: getNextPathName,

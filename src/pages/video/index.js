@@ -77,8 +77,13 @@ export default class VideoPage extends Component<{}> {
 
         if(pathName != undefined){
             playUrl = urlPrefix + pathName;
+
+            if(pathName.indexOf('.') != -1){
+                var pathNameArr = pathName.split('.');
+                playType = pathNameArr[1].toLowerCase();
+            }
         }
-        //console.log('playUrl', playUrl);
+        console.log('playUrl', playUrl, playType);
 
         return (
             <View style={VideoStyle.fullScreen}>
