@@ -27,6 +27,7 @@ export default class VideoPage extends Component<{}> {
     componentWillMount() {
         console.log('state', this.state);
         store.dispatch(actions.getIndexFilesAction());
+        store.dispatch(actions.getIndexAction());
     }
 
     componentDidMount() {
@@ -48,7 +49,7 @@ export default class VideoPage extends Component<{}> {
     };
 
     onEnd = () => {
-        store.dispatch(actions.setPausedAction({ paused: true }));
+        store.dispatch(actions.setPausedAction({ paused: true, end: true }));
         this.video.seek(0);
     };
 
@@ -70,27 +71,14 @@ export default class VideoPage extends Component<{}> {
         //console.log('videoOption', videoOption, videoIndexFiles);
 
         var urlPrefix = 'http://' + config.ip + ':9999';
-        var playUrl = urlPrefix + '/movie/mp4/IMG_6374.mp4';
+        var playUrl = urlPrefix + '/movie/IMG_4597.mp4';
         var playType = 'mp4';
-        var files = videoIndexFiles.files;
-        var index = videoIndexFiles.index;
-        var status = videoIndexFiles.status;
+        var pathName = videoIndexFiles.pathName;
 
-        if(files){
-            var filesLen = files.length;
-            console.log('filesLen', filesLen);
-
-            if(filesLen > 0){
-                var firstFile = files[0];
-                var firstFilePathName = firstFile.pathname;
-                playUrl = urlPrefix + firstFilePathName;
-
-                /*
-                var pathArr = firstFilePathName.split('.');
-                playType = pathArr[1];
-                */
-            }
+        if(pathName != undefined){
+            playUrl = urlPrefix + pathName;
         }
+        //console.log('playUrl', playUrl);
 
         return (
             <View style={VideoStyle.fullScreen}>

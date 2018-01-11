@@ -6,7 +6,7 @@ import { combineReducers } from 'redux';
 import _ from 'lodash';
 import {
     setDuration, setCurrentTime, setPaused,
-    getIndexFiles
+    getIndexFiles, getNextPathName, getIndex
 } from './actions';
 
 var defaultVideoOption = {
@@ -16,7 +16,7 @@ var defaultVideoOption = {
     resizeMode: 'contain',
     duration: 0.0,
     currentTime: 0.0,
-    paused: true
+    paused: false
 };
 
 const videoOption = (state = defaultVideoOption, action) => {
@@ -42,8 +42,14 @@ const videoIndexFiles = (state = {}, action) => {
     switch (action.type){
         case getIndexFiles:
             var newState = _.cloneDeep(state);
-            newState.indexFiles = action.indexFiles;
+            newState.pathName = action.pathName;
             return newState;
+        case getNextPathName:
+            var newState = _.cloneDeep(state);
+            newState.pathName = action.pathName;
+            return newState;
+        case getIndex:
+            return state;
         default:
             return state;
     }
