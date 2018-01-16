@@ -8,8 +8,14 @@ import {
     Text,
     View,
     Image,
+    Dimensions,
     TouchableOpacity
 } from 'react-native';
+
+var {
+    height: deviceHeight,
+    width: deviceWidth
+} = Dimensions.get('window');
 
 import Video from 'react-native-video';
 
@@ -86,14 +92,14 @@ export default class VideoPage extends Component<{}> {
         console.log('playUrl', playUrl, playType);
 
         return (
-            <View style={VideoStyle.fullScreen}>
+            <View style={{ width: deviceWidth, height: deviceHeight }}>
                 <TouchableOpacity
-                    style={VideoStyle.fullScreen}
+                    style={{ width: deviceWidth, height: deviceHeight }}
                     onPress={this.onPressVideo}>
                     <Video
                         ref={(ref: Video) => { this.video = ref }}
                         source={{ uri: playUrl, type: playType }}
-                        style={VideoStyle.fullScreen}
+                        style={{ width: deviceWidth, height: deviceHeight }}
                         rate={videoOption.rate}
                         paused={videoOption.paused}
                         volume={videoOption.volume}

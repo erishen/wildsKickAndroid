@@ -244,7 +244,7 @@ var getVideoIndex = function(params, dispatch){
 
         getVideoIndexTimeout = setTimeout(function(){
             getVideoIndex(params, dispatch);
-        }, 3000);
+        }, 5000);
     });
 };
 
